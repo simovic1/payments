@@ -1,6 +1,6 @@
 package hr.tsimovic.payments.dto;
 
-public class PaymentsRequest {
-    private Long invoiceId;
-    private Double amount;
+public record PaymentsRequest (
+        Long invoiceId,
+        Double amount) {
 }

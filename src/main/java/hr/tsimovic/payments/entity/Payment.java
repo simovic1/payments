@@ -11,13 +11,13 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Table(name = "payments")
-public class Payments {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(name = "invoice_id")
-    private Integer invoiceId;
+    private Long invoiceId;
 
     private Double amount;
 

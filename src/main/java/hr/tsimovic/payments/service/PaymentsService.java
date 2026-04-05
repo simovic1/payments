@@ -1,6 +1,7 @@
 package hr.tsimovic.payments.service;
 
-import hr.tsimovic.commons.exception.IdempotencyConflictException;
+import hr.tsimovic.payments.dto.PaymentsResult;
+import hr.tsimovic.payments.exception.IdempotencyConflictException;
 import hr.tsimovic.payments.dto.PaymentsRequest;
 import hr.tsimovic.payments.dto.PaymentsResponse;
 import hr.tsimovic.payments.entity.Idempotency;
@@ -41,7 +42,7 @@ public class PaymentsService {
     }
 
     @Transactional
-    public PaymentsResponse createPayment(PaymentsRequest paymentRequest, String idempotencyKey) {
+    public PaymentsResult createPayment(PaymentsRequest paymentRequest, String idempotencyKey) {
         log.info("Creating payment for idempotencyKey={}", idempotencyKey);
         String requestHash = requestHashService.hashRequest(paymentRequest);
 
@@ -55,7 +56,8 @@ public class PaymentsService {
                 throw new IdempotencyConflictException("Same idempotency key used with different payload");
             }
 
-            return jsonPayloadService.deserialize(idempotency.getResponsePayload(), PaymentsResponse.class);
+            PaymentsResponse response = jsonPayloadService.deserialize(idempotency.getResponsePayload(), PaymentsResponse.class);
+            return new PaymentsResult(false, response);
         }
 
         Idempotency idempotency = new Idempotency();
@@ -81,7 +83,7 @@ public class PaymentsService {
 
         idempotencyRepository.save(idempotency);
 
-        return response;
+        return new PaymentsResult(true, response);
     }
 
 

@@ -1,4 +1,4 @@
-package hr.tsimovic.commons.exception;
+package hr.tsimovic.payments.exception;
 
 public class IdempotencyConflictException extends RuntimeException {
     private String message;

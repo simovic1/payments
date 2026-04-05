@@ -2,6 +2,7 @@ package hr.tsimovic.payments.controller;
 
 import hr.tsimovic.payments.dto.PaymentsRequest;
 import hr.tsimovic.payments.dto.PaymentsResponse;
+import hr.tsimovic.payments.dto.PaymentsResult;
 import hr.tsimovic.payments.service.PaymentsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,11 @@ public class PaymentsController {
     @PostMapping
     public ResponseEntity<PaymentsResponse> addPayment(@RequestHeader ("Idempotency-Key")  String idempotencyKey,
             @RequestBody PaymentsRequest paymentsRequest) {
-        PaymentsResponse response = paymentsService.createPayment(paymentsRequest, idempotencyKey);
+        PaymentsResult result = paymentsService.createPayment(paymentsRequest, idempotencyKey);
+        PaymentsResponse response = result.paymentsResponse();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return result.isNew() ?
+                ResponseEntity.status(HttpStatus.CREATED).body(response) :
+                ResponseEntity.ok(response);
     }
 }

@@ -57,8 +57,8 @@ public class PaymentsService {
         payment.setInvoiceId(paymentRequest.invoiceId());
         payment.setStatus(PaymentStatus.SUCCESS);
 
-        Payment saved = paymentsRepository.save(payment);
-        PaymentsResponse response = paymentsMapper.toPaymentsResponse(saved);
+        paymentsRepository.save(payment);
+        PaymentsResponse response = paymentsMapper.toPaymentsResponse(payment);
 
         String responsePayload = jsonPayloadService.serialize(response);
 

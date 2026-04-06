@@ -19,7 +19,8 @@ public class Payment {
     @Column(name = "invoice_id")
     private Long invoiceId;
 
-    private Double amount;
+    @Column(name = "amount_minor")
+    private Long amountMinor;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;

@@ -4,6 +4,7 @@ import hr.tsimovic.payments.dto.PaymentsRequest;
 import hr.tsimovic.payments.dto.PaymentsResponse;
 import hr.tsimovic.payments.dto.PaymentsResult;
 import hr.tsimovic.payments.service.PaymentsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,9 @@ public class PaymentsController {
     }
 
     @PostMapping
-    public ResponseEntity<PaymentsResponse> addPayment(@RequestHeader ("Idempotency-Key")  String idempotencyKey,
-            @RequestBody PaymentsRequest paymentsRequest) {
+    public ResponseEntity<PaymentsResponse> addPayment(@RequestHeader("Idempotency-Key") String idempotencyKey,
+                                                       @RequestBody @Valid PaymentsRequest paymentsRequest) {
+
         PaymentsResult result = paymentsService.createPayment(paymentsRequest, idempotencyKey);
         PaymentsResponse response = result.paymentsResponse();
 

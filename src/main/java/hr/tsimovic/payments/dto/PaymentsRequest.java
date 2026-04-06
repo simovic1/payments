@@ -1,6 +1,9 @@
 package hr.tsimovic.payments.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 public record PaymentsRequest (
-        Long invoiceId,
-        Double amount) {
+        @NotNull Long invoiceId,
+        @NotNull @PositiveOrZero Long amountMinor) {
 }

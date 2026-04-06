@@ -8,6 +8,7 @@ import hr.tsimovic.payments.entity.Idempotency;
 import hr.tsimovic.payments.entity.Payment;
 import hr.tsimovic.payments.enums.IdempotencyStatus;
 import hr.tsimovic.payments.enums.PaymentStatus;
+import hr.tsimovic.payments.exception.RequestStillProcessingException;
 import hr.tsimovic.payments.mapper.PaymentsMapper;
 import hr.tsimovic.payments.repository.IdempotencyRepository;
 import hr.tsimovic.payments.repository.PaymentsRepository;
@@ -56,6 +57,10 @@ public class PaymentsService {
                 throw new IdempotencyConflictException("Same idempotency key used with different payload");
             }
 
+            if (IdempotencyStatus.PROCESSING.equals(idempotency.getStatus())) {
+                throw new RequestStillProcessingException("Request is still being processed");
+            }
+
             PaymentsResponse response = jsonPayloadService.deserialize(idempotency.getResponsePayload(), PaymentsResponse.class);
             return new PaymentsResult(false, response);
         }
@@ -69,7 +74,7 @@ public class PaymentsService {
         idempotencyRepository.save(idempotency);
 
         Payment payment = new Payment();
-        payment.setAmount(paymentRequest.amount());
+        payment.setAmountMinor(paymentRequest.amountMinor());
         payment.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
         payment.setInvoiceId(paymentRequest.invoiceId());
         payment.setStatus(PaymentStatus.PROCESSING);

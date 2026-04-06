@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public record PaymentsResponse(
         Long id,
         Integer invoiceId,
-        Double amount,
+        Long amountMinor,
         PaymentStatus status,
         Timestamp createdAt
 ) {
